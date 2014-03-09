@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-program-class: eu.stratosphere.dima.recommendationsystem.MatrixFactori
- zation
-Build-Jdk: 1.7.0_05
-Built-By: BillyLinux
-Created-By: Maven Integration for Eclipse
-
