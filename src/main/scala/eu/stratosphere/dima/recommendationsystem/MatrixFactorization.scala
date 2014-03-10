@@ -22,7 +22,7 @@ object RunMatrixFactorizationLocal {
       println(job.getDescription)
       return
     }
-    val plan = job.getScalaPlan(args(0).toInt, args(1), args(2))
+    val plan = job.getScalaPlan(args(0).toInt, args(1), args(2), args(3).toFloat, args(4).toInt, args(5).toInt, args(6).toInt, args(7).toInt)
     LocalExecutor.execute(plan)
     System.exit(0)
   }
@@ -33,12 +33,17 @@ class MatrixFactorization extends Program with ProgramDescription with Serializa
     "Parameters: [numSubStasks] [input] [output]"
   }
   override def getPlan(args: String*) = {
-    getScalaPlan(args(0).toInt, args(1), args(2))
+    getScalaPlan(args(0).toInt, args(1), args(2), args(3).toFloat, args(4).toInt, args(5).toInt, args(6).toInt, args(7).toInt)
   }
 
   def formatOutput = (word: String, count: Int) => "%s %d".format(word, count)
 
-  def getScalaPlan(numSubTasks: Int, textInput: String, wordsOutput: String) = {
+  def getScalaPlan(numSubTasks:Int, inputPath: String, outputPath: String, lambda: Float, numFeatures: Int, numUsers: Int, numItems: Int, numIter: Int) = {
+    println("Job Started")
+    println("InputPath: " + inputPath)
+    println("OutputPath: " + outputPath)
+    Util.setParameters(lambda, numFeatures, numUsers, numItems)
+    
     val input = TextFile(textInput)
 
     val words = input flatMap { _.toLowerCase().split("""\W+""") filter { _ != "" } map { (_, 1) } }
