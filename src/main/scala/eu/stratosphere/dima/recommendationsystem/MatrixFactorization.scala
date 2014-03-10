@@ -44,17 +44,5 @@ class MatrixFactorization extends Program with ProgramDescription with Serializa
     println("OutputPath: " + outputPath)
     Util.setParameters(lambda, numFeatures, numUsers, numItems)
     
-    val input = TextFile(textInput)
-
-    val words = input flatMap { _.toLowerCase().split("""\W+""") filter { _ != "" } map { (_, 1) } }
-    val counts = words groupBy { case (word, _) => word } reduce { (w1, w2) => (w1._1, w1._2 + w2._2) }
-
-    counts neglects { case (word, _) => word }
-    counts preserves({ case (word, _) => word }, { case (word, _) => word })
-    val output = counts.write(wordsOutput, DelimitedOutputFormat(formatOutput.tupled))
-  
-    val plan = new ScalaPlan(Seq(output), "Word Count (immutable)")
-    plan.setDefaultParallelism(numSubTasks)
-    plan
   }
 }
