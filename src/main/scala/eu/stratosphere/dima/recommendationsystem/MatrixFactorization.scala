@@ -44,5 +44,36 @@ class MatrixFactorization extends Program with ProgramDescription with Serializa
     println("OutputPath: " + outputPath)
     Util.setParameters(lambda, numFeatures, numUsers, numItems)
     
+    val tupple = DataSource(inputPath, CsvInputFormat[(Int, Int, Float)](Seq(0, 1, 2), "\n", '\t'))
+    
+    val itemRatingVectorMap = tupple map {new ItemRatingVectorMapper}
+    val itemRatingVectorReduce = itemRatingVectorMap groupBy {case (itemID, _) => itemID} reduceGroup {new ItemRatingVectorReducer}
+    
+    val userRatingVectorMap = tupple map {new UserRatingVectorMapper}
+    val userRatingVectorReduce = userRatingVectorMap groupBy {case (userID, _) => userID} reduceGroup {new UserRatingVectorReducer}
+    
+    val initItemFeatureMatrixMap = itemRatingVectorReduce map {new InitItemFeatureMatrixMapper}
+    val initItemFeatureMatrixReduce = initItemFeatureMatrixMap groupBy {case (flag, _, _) => flag} reduceGroup {new ItemFeatureMatrixReducer}
+    
+    var userFeatureMatrixCross = userRatingVectorReduce cross initItemFeatureMatrixReduce map {new UserFeatureMatrixCrosser}
+    var userFeatureMatrixReduce = userFeatureMatrixCross groupBy {case (flag, _, _) => flag} reduceGroup {new UserFeatureMatrixReducer}
+    
+    var itemFeatureMatrixCross = userFeatureMatrixCross
+    var itemFeatureMatrixReduce = userFeatureMatrixReduce
+    
+    for (i <- 1 to numIter) {
+      itemFeatureMatrixCross = itemRatingVectorReduce cross userFeatureMatrixReduce map {new ItemFeatureMatrixCrosser}
+      itemFeatureMatrixReduce = itemFeatureMatrixCross groupBy {case (flag, _, _) => flag} reduceGroup {new UserFeatureMatrixReducer}
+      userFeatureMatrixCross = userRatingVectorReduce cross itemFeatureMatrixReduce map {new UserFeatureMatrixCrosser}
+      userFeatureMatrixReduce = userFeatureMatrixCross groupBy {case (flag, _, _) => flag} reduceGroup {new UserFeatureMatrixReducer}
+    }
+    
+    val prediction = itemFeatureMatrixCross cross userFeatureMatrixCross map {new PredicetionCrosser}
+    
+    val output = prediction.write(outputPath, CsvOutputFormat("\n", "\t"))
+  
+    val plan = new ScalaPlan(Seq(output), "Rating Prediction Computation")
+    plan.setDefaultParallelism(numSubTasks)
+    plan
   }
 }

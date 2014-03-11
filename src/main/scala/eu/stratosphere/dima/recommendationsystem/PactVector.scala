@@ -12,7 +12,10 @@ import eu.stratosphere.types.Value
 class PactVector extends Value {
   
   val vectorWritable : VectorWritable = new VectorWritable
-  
+
+  def reset(writesLaxPrecision : Boolean) {
+    vectorWritable.setWritesLaxPrecision(writesLaxPrecision);
+  }
   def set(v: Vector) {
     vectorWritable.set(v)
   }

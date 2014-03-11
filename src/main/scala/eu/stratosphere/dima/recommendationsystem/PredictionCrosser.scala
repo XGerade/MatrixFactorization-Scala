@@ -1,4 +1,4 @@
-package eu.stratosphere.dima.recommendationsystem
+package eu.stratosphere.dima.recommendationsystem;
 
 import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.SequentialAccessSparseVector;
@@ -8,8 +8,8 @@ import org.apache.mahout.math.map.OpenIntObjectHashMap;
 
 import eu.stratosphere.api.scala.functions._
 
-class PredicetionCrosser extends CrossFunction[(Int, PactVector), (Int, PactVector), (Int, Int, Float)]{
-  override def apply (l: (Int, PactVector), r: (Int, PactVector)) : (Int, Int, Float) = {
+class PredicetionCrosser extends CrossFunction[(Int, PactVector, Int), (Int, PactVector, Int), (Int, Int, Float)]{
+  override def apply (l: (Int, PactVector, Int), r: (Int, PactVector, Int)) : (Int, Int, Float) = {
     val userID = r._3
     val itemID = l._3
     val itemVector = l._2.get
