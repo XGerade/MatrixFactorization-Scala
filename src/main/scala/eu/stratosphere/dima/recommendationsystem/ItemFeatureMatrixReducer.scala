@@ -3,13 +3,13 @@ package eu.stratosphere.dima.recommendationsystem
 import eu.stratosphere.api.scala.functions._
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.Matrix;
-import org.apache.mahout.math.SparseMatrix;
+import org.apache.mahout.math.DenseMatrix;
 
 
 class ItemFeatureMatrixReducer extends GroupReduceFunction[(Int, PactVector, Int), (Int, PactMatrix)] {
   override def apply(in: Iterator[(Int, PactVector, Int)]) : (Int, PactMatrix) = {
-    val features : Matrix = new SparseMatrix(Util.numItems, Util.numFeatures)
-    
+    val features : Matrix = new DenseMatrix(Util.numItems + 1, Util.numFeatures)
+
     while (in.hasNext) {
       val temp = in.next()
       val itemID = temp._3

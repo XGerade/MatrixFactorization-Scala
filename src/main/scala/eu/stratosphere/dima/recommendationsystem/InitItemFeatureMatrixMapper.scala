@@ -9,12 +9,12 @@ import org.apache.mahout.math.Vector;
 
 class InitItemFeatureMatrixMapper extends MapFunction[(Int, PactVector), (Int, PactVector, Int)] {
   override def apply(in : (Int, PactVector)) : (Int, PactVector, Int) = {
-    val features : Vector = new SequentialAccessSparseVector(Integer.MAX_VALUE, Util.numFeatures)
+    val features : Vector = new SequentialAccessSparseVector(Util.numFeatures, Util.numFeatures)
     val featureVector : PactVector = new PactVector()
     val numfeatures = Util.numFeatures
     val random : Random = new Random()
     for (i <- 1 to numfeatures) {
-      features.set(i, random.nextFloat());
+      features.set(i - 1, random.nextFloat());
     }
     featureVector.set(features)
     (0, featureVector, in._1)

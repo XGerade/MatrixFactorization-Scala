@@ -7,18 +7,19 @@ import java.io.IOException;
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.MatrixWritable;
 
+
 import eu.stratosphere.types.Value
 
 class PactMatrix extends Value {
   
   val matrixWritable : MatrixWritable = new MatrixWritable
   
-  def set(v: Matrix) {
-    matrixWritable.set(v)
+  def set(m: Matrix) {
+    matrixWritable.set(m)
   }
-  
+    
   def get : Matrix = {
-    val result = matrixWritable.get()
+    val result = matrixWritable.get
     result
   }
   

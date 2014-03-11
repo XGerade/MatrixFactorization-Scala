@@ -1,3 +1,5 @@
 /target
-
+/datasets
+/results
 .cache
+*.~1~

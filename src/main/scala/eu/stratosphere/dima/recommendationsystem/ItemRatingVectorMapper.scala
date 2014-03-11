@@ -7,15 +7,15 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 class ItemRatingVectorMapper extends MapFunction[(Int, Int, Float), (Int, PactVector)] {
   override def apply(in: (Int, Int, Float)) : (Int, PactVector) = {
 
-    val ratings : Vector = new RandomAccessSparseVector(Integer.MAX_VALUE, 1)
+    val ratings : Vector = new RandomAccessSparseVector(Util.numUsers + 1, 1)
     val ratingVector : PactVector = new PactVector()
     ratingVector.reset(true)
     
-    ratings.setQuick(in._2, in._3)
+    ratings.setQuick(in._1, in._3)
     
     ratingVector.set(ratings)
     
-    (in._1, ratingVector)
+    (in._2, ratingVector)
     
   }
 }
