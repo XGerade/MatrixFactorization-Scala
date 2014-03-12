@@ -1,3 +1,10 @@
+/*
+ * Project: MatrixFactorization
+ * @author Xugang Zhou
+ * @author Fangzhou Yang
+ * @version 1.0
+ */
+
 package eu.stratosphere.dima.recommendationsystem
 
 import java.io.DataInput;
@@ -10,6 +17,9 @@ import org.apache.mahout.math.MatrixWritable;
 
 import eu.stratosphere.types.Value
 
+/*
+ * This Pact class is a wrapper of Matrix which could be passed between on stratosphere
+ */
 class PactMatrix extends Value {
   
   val matrixWritable : MatrixWritable = new MatrixWritable
