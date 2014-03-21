@@ -5,9 +5,6 @@
  * @version 1.0
  */
 
-/*
- * This Cross class cross the user-rating-vector and the item-feature-matrix to produce a feature-vector for each user
- */
 package eu.stratosphere.dima.recommendationsystem
 
 import eu.stratosphere.api.scala.functions._
@@ -20,6 +17,9 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+/*
+ * This Cross class cross the user-rating-vector and the item-feature-matrix to produce a feature-vector for each user
+ */
 class UserFeatureMatrixCrosser extends CrossFunction[(Int, PactVector), (Int, PactMatrix), (Int, PactVector, Int)] {
   /*
    * This override method defines how the feature-vector is calculated
